@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="./node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="./node_modules/chart.js/dist/chart.js"></script>
     <link rel="stylesheet" href="./css/brightlight-green.css">
     <link rel="shortcut icon" href="./icon/icon.ico" type="image/x-icon">
     <style>
@@ -112,7 +113,8 @@
     </div>
     <p><button id="calc_cost">Calcular Custo</button></p>
     <div class="container">
-        <fieldset id="output" style="display: hidden;">
+        <fieldset id="output">
+            <canvas id="expensesChart"></canvas>
         </fieldset>
     </div>
     <footer>This program is under MIT License. <a href="./license.html" target="_self">Read more</a></footer>
@@ -124,5 +126,36 @@
             document.forms[i].reset();
         }
     })
+</script>
+<script>
+    /*
+    const ctx = document.getElementById("expensesChart");
+    
+    const config = {
+        type: "doughnut",
+        data: {
+            labels: ["Red", "Green", "Blue", "Yellow"],
+            datasets: [{
+                label: "R$",
+                data: [5, 35, 55, 5],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: "top"
+                },
+                title: {
+                    display: true,
+                    text: "Principais Despesas"
+                }
+            }
+        }
+    };
+
+    new Chart(ctx, config);
+    */
 </script>
 </html>

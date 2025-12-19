@@ -17,7 +17,6 @@ const calc_cost = $("#calc_cost");
 // HTML Elements
 const output = $("#output");
 
-
 add_tecido.addEventListener("click", add_new_tissue);
 add_extra.addEventListener("click", add_new_extra);
 
@@ -169,10 +168,6 @@ function calculate_cost() {
         }
     };
 
-    // DEBUG
-    console.log(`Quantity of tissues: ${tissue_quantity}`);
-    console.log(`Quantity of extra items: ${extra_quantity}`);
-
     if (tissue_quantity > 0) {
         let tissues = $$(".tecido");
 
@@ -319,5 +314,50 @@ function calculate_cost() {
     output.appendChild(worker_cost_p);
     output.appendChild(final_price_p);
 
-    console.log(items);
+    const expensesChart = document.createElement("canvas");
+    expensesChart.id = "expensesChart";
+
+    output.appendChild(expensesChart);
+
+    const config = {
+        type: "doughnut",
+        data: {
+            labels: ["Tecidos", "Itens Extras"],
+            datasets: [{
+                label: "",
+                data: [Number(tissues_total_cost), Number(extra_items_total_cost)],
+                hoverOffset: 4,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            layout: {
+                autoPadding: true,
+                padding: 5
+            },
+            plugins: {
+                legend: {
+                    position: "top"
+                },
+                title: {
+                    display: true,
+                    text: "Principais Despesas"
+                },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            console.log(tooltipItem);
+                            return `${tooltipItem.dataset.label}${Number(tooltipItem.raw).toLocaleString("pt-BR", {currency: "BRL", style: "currency"})}`
+                        }
+                    }
+                }
+            },
+            locale: "pt-BR",
+            currency: "BRL"
+        }
+    };
+
+    new Chart(expensesChart, config);
 }

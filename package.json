@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "Calculadora de produtos",
   "dependencies": {
+    "chart.js": "^4.5.1",
     "electron-squirrel-startup": "^1.0.1",
     "sweetalert2": "^11.26.10"
   },
