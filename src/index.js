@@ -169,15 +169,6 @@ function calculate_cost() {
         }
     };
 
-    if ((isNaN(items.final_ajusts.worker_cost) || items.final_ajusts.worker_cost === "") || (isNaN(items.final_ajusts.profit_percent) || items.final_ajusts.profit_percent === "")) {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Houve um erro, verifique se os ajustes finais foram configurados corretamente."
-        });
-        return;
-    }
-
     // DEBUG
     console.log(`Quantity of tissues: ${tissue_quantity}`);
     console.log(`Quantity of extra items: ${extra_quantity}`);
@@ -257,6 +248,15 @@ function calculate_cost() {
                 quantity_used: extra_items[i].querySelector("#quantity_used").value
             };
         }
+    }
+
+    if ((isNaN(items.final_ajusts.worker_cost) || items.final_ajusts.worker_cost === "") || (isNaN(items.final_ajusts.profit_percent) || items.final_ajusts.profit_percent === "")) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Houve um erro, verifique se os ajustes finais foram configurados corretamente."
+        });
+        return;
     }
 
     let tissues_total_cost = 0;
