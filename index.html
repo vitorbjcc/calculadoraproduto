@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="./css/brightlight-green.css">
+    <link rel="shortcut icon" href="./icon/icon.ico" type="image/x-icon">
+    <style>
+        body {
+            display: block;
+            margin: 0px auto;
+            text-align: center;
+        }
+
+        html {
+            text-align: center;
+        }
+
+        fieldset {
+            width: fit-content;
+            height: fit-content;
+        }
+
+        .tecidos, .itens_extras {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #tipo_unidade:disabled {
+            cursor: not-allowed;
+        }
+
+        footer {
+            width: 100vw;
+            margin-top: 15px;
+        }
+
+        a:hover {
+            color: #00a545;
+        }
+
+        .swal2-confirm {
+            background-color: #00c853;
+        }
+
+        .swal2-confirm:hover {
+            background-color: #00a545;
+        }
+    </style>
+    <title>Calculadora de Produtos</title>
+</head>
+<body>
+    <h4>Tecidos</h4>
+    <div class="tecidos">
+        <form class="tecido1 tecido">
+            <fieldset>
+                <legend>Tecido 1</legend>
+                <div>
+                    <label for="nome_tecido">Nome do tecido</label>
+                    <input type="text" id="nome_tecido" placeholder="Digite o nome do tecido">
+                </div>
+                <div>
+                    <label for="largura_tecido">Largura do Tecido (em cm)</label>
+                    <input type="number" id="largura_tecido" placeholder="Digite a largura do tecido">
+                </div>
+                <div>
+                    <label for="comprimento_tecido">Comprimento do Tecido (em cm)</label>
+                    <input type="number" id="comprimento_tecido" placeholder="Digite o comprimento do tecido">
+                </div>
+                <div>
+                    <label for="preco_tecido">Preço pago no Tecido (R$)</label>
+                    <input type="number" id="preco_tecido" placeholder="Digite o preço pago no tecido">
+                </div>
+                <div>
+                    <label for="largura_retirada_tecido">Largura da Área Retirada (em cm)</label>
+                    <input type="number" id="largura_retirada_tecido" placeholder="Digite a largura retirada">
+                </div>
+                <div>
+                    <label for="comprimento_retirado_tecido">Comprimento da Área Retirada (em cm)</label>
+                    <input type="number" id="comprimento_retirado_tecido" placeholder="Digite o comprimento retirado">
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <p><button id="add_tecido">Adicionar Tecido</button></p>
+    <h4>Itens Extras</h4>
+    <div class="itens_extras">
+    </div>
+    <p><button id="add_extra">Adicionar Item Extra</button></p>
+    <div class="container">
+        <form>
+            <fieldset>
+                <legend>Ajustes Finais</legend>
+                <div>
+                    <label for="valor_mao_obra">Valor da Mão de Obra (R$)</label>
+                    <input type="number" id="valor_mao_obra" placeholder="Valor da mão de obra">
+                </div>
+                <div>
+                    <label for="porcentagem_lucro">Porcentagem de Lucro (%)</label>
+                    <input type="number" id="porcentagem_lucro" placeholder="Porcentagem de lucro">
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <p><button id="calc_cost">Calcular Custo</button></p>
+    <div class="container">
+        <fieldset id="output" style="display: hidden;">
+        </fieldset>
+    </div>
+    <footer>This program is under MIT License. <a href="./license.html" target="_self">Read more</a></footer>
+</body>
+<script src="./src/index.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        for (let i = 0; i < document.forms.length; i++) {
+            document.forms[i].reset();
+        }
+    })
+</script>
+</html>
