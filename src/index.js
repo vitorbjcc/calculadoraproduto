@@ -4,6 +4,10 @@ const $$ = document.querySelectorAll.bind(document);
 let tissue_counter = $$(".tecido").length;
 let extra_counter = $$(".item_extra").length;
 
+let chartCounter = 0;
+
+let currentChartInstance = null;
+
 // Classes
 const tecidos = $(".tecidos");
 const extras = $(".itens_extras");
@@ -314,12 +318,21 @@ function calculate_cost() {
     output.appendChild(worker_cost_p);
     output.appendChild(final_price_p);
 
+    const charts = document.createElement("div");
+    charts.classList.add("charts");
+
     const expensesChart = document.createElement("canvas");
     expensesChart.id = "expensesChart";
 
-    output.appendChild(expensesChart);
+    const nextChartButton = document.createElement("button");
+    nextChartButton.innerText = "Próximo";
+    nextChartButton.id = "nextChart";
 
-    const config = {
+    charts.appendChild(expensesChart);
+
+    output.appendChild(charts);
+
+    const expensesConfig = {
         type: "doughnut",
         data: {
             labels: ["Tecidos", "Itens Extras"],
@@ -332,6 +345,7 @@ function calculate_cost() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: true,
             layout: {
                 autoPadding: true,
                 padding: 5
@@ -348,7 +362,6 @@ function calculate_cost() {
                     enabled: true,
                     callbacks: {
                         label: function(tooltipItem) {
-                            console.log(tooltipItem);
                             return `${tooltipItem.dataset.label}${Number(tooltipItem.raw).toLocaleString("pt-BR", {currency: "BRL", style: "currency"})}`
                         }
                     }
@@ -359,5 +372,210 @@ function calculate_cost() {
         }
     };
 
-    new Chart(expensesChart, config);
+    const expensesChartInstance = new Chart(expensesChart, expensesConfig);
+
+    currentChartInstance = expensesChartInstance;
+
+    nextChartButton.onclick = function() {
+        nextChart(expensesChart, {
+            tissue: {
+                totalCost: Number(tissues_total_cost),
+                tissues: items.tissues
+            },
+            extra: {
+                totalCost: Number(extra_items_total_cost),
+                extras: items.extra
+            }
+        });
+    }
+
+    output.appendChild(nextChartButton);
+}
+
+function nextChart(ctx, items) {
+    let config = {};
+
+    if (chartCounter + 1 == 3) {
+        const expensesConfig = {
+            type: "doughnut",
+            data: {
+                labels: ["Tecidos", "Itens Extras"],
+                datasets: [{
+                    label: "",
+                    data: [items.tissue.totalCost, items.extra.totalCost],
+                    hoverOffset: 4,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                layout: {
+                    autoPadding: true,
+                    padding: 5
+                },
+                plugins: {
+                    legend: {
+                        position: "top"
+                    },
+                    title: {
+                        display: true,
+                        text: "Principais Despesas"
+                    },
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return `${tooltipItem.dataset.label}${Number(tooltipItem.raw).toLocaleString("pt-BR", {currency: "BRL", style: "currency"})}`
+                            }
+                        }
+                    }
+                },
+                locale: "pt-BR",
+                currency: "BRL"
+            }
+        };
+
+        config = expensesConfig;
+
+        chartCounter = 0;
+    } else if (chartCounter + 1 == 1) {
+        let labels = [];
+        let data = [];
+
+        for (key in items.tissue.tissues) {
+            let currentTissue = items.tissue.tissues[key];
+
+            labels.push(currentTissue.name);
+
+            let price = (Number(currentTissue.width_cut) * Number(currentTissue.length_cut)) * (Number(currentTissue.price) / (Number(currentTissue.width) * Number(currentTissue.length)));
+
+            data.push(price);
+
+            /*
+                name: tissues[i].querySelector("#nome_tecido").value,
+                width: tissues[i].querySelector("#largura_tecido").value,
+                length: tissues[i].querySelector("#comprimento_tecido").value,
+                price: tissues[i].querySelector("#preco_tecido").value,
+                width_cut: tissues[i].querySelector("#largura_retirada_tecido").value,
+                length_cut: tissues[i].querySelector("#comprimento_retirado_tecido").value
+            */
+        }
+
+        const tissuesExpensesConfig = {
+            type: "doughnut",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "",
+                    data: data,
+                    hoverOffset: 4,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                layout: {
+                    autoPadding: true,
+                    padding: 5
+                },
+                plugins: {
+                    legend: {
+                        position: "top"
+                    },
+                    title: {
+                        display: true,
+                        text: "Tecidos Despesas"
+                    },
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return `${tooltipItem.dataset.label}${Number(tooltipItem.raw).toLocaleString("pt-BR", {currency: "BRL", style: "currency"})}`
+                            }
+                        }
+                    }
+                },
+                locale: "pt-BR",
+                currency: "BRL"
+            }
+        };
+
+        config = tissuesExpensesConfig;
+
+        chartCounter++;
+    }
+    else {
+        let labels = [];
+        let data = [];
+
+        for (key in items.extra.extras) {
+            let currentExtraItem = items.extra.extras[key];
+
+            labels.push(currentExtraItem.name);
+
+            let price = Number(currentExtraItem.quantity_used) * (Number(currentExtraItem.total_price) / Number(currentExtraItem.quantity_bought));
+
+            data.push(price);
+
+            /*
+                    name: extra_items[i].querySelector("#nome_item").value,
+                    unit_type: extra_items[i].querySelector("#tipo_unidade").value,
+                    quantity_bought: extra_items[i].querySelector("#quantity_bought").value,
+                    total_price: extra_items[i].querySelector("#total_price").value,
+                    quantity_used: extra_items[i].querySelector("#quantity_used").value
+            */
+        }
+
+        const extraExpensesConfig = {
+            type: "doughnut",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "",
+                    data: data,
+                    hoverOffset: 4,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                layout: {
+                    autoPadding: true,
+                    padding: 5
+                },
+                plugins: {
+                    legend: {
+                        position: "top"
+                    },
+                    title: {
+                        display: true,
+                        text: "Itens Extras Despesas"
+                    },
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return `${tooltipItem.dataset.label}${Number(tooltipItem.raw).toLocaleString("pt-BR", {currency: "BRL", style: "currency"})}`
+                            }
+                        }
+                    }
+                },
+                locale: "pt-BR",
+                currency: "BRL"
+            }
+        };
+
+        config = extraExpensesConfig;
+
+        chartCounter++;
+    }
+
+    currentChartInstance.destroy();
+
+    const newChartInstance = new Chart(ctx, config);
+
+    currentChartInstance = newChartInstance;
 }
