@@ -267,7 +267,7 @@ function calculate_cost() {
 
     for (key in items.tissues) {
         let currentTissue = items.tissues[key];
-        tissues_total_cost += (Number(currentTissue.width_cut) * Number(currentTissue.length_cut)) * (Number(currentTissue.price) / (Number(currentTissue.width) * Number(currentTissue.length)));
+        tissues_total_cost += ((Number(currentTissue.width_cut) * Number(currentTissue.length_cut)) * (Number(currentTissue.price) / (Number(currentTissue.width) * Number(currentTissue.length)))) || 0;
 
         /*
             name: tissues[i].querySelector("#nome_tecido").value,
@@ -282,7 +282,7 @@ function calculate_cost() {
     for (key in items.extra) {
         let currentExtraItem = items.extra[key];
 
-        extra_items_total_cost += Number(currentExtraItem.quantity_used) * (Number(currentExtraItem.total_price) / Number(currentExtraItem.quantity_bought));
+        extra_items_total_cost += (Number(currentExtraItem.quantity_used) * (Number(currentExtraItem.total_price) / Number(currentExtraItem.quantity_bought))) || 0;
 
         /*
                 name: extra_items[i].querySelector("#nome_item").value,
@@ -448,7 +448,7 @@ function nextChart(ctx, items) {
 
             labels.push(currentTissue.name);
 
-            let price = (Number(currentTissue.width_cut) * Number(currentTissue.length_cut)) * (Number(currentTissue.price) / (Number(currentTissue.width) * Number(currentTissue.length)));
+            let price = ((Number(currentTissue.width_cut) * Number(currentTissue.length_cut)) * (Number(currentTissue.price) / (Number(currentTissue.width) * Number(currentTissue.length)))) || 0;
 
             data.push(price);
 
@@ -515,7 +515,7 @@ function nextChart(ctx, items) {
 
             labels.push(currentExtraItem.name);
 
-            let price = Number(currentExtraItem.quantity_used) * (Number(currentExtraItem.total_price) / Number(currentExtraItem.quantity_bought));
+            let price = (Number(currentExtraItem.quantity_used) * (Number(currentExtraItem.total_price) / Number(currentExtraItem.quantity_bought))) || 0;
 
             data.push(price);
 
